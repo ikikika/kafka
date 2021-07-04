@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!-- LEAFLET -->
+    <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+    <!-- END LEAFLET -->
+    <title>Live Map</title>
+  </head>
+  <body>
+    
+
+    <!-- LEAFLET -->
+    <div id="mapid" style="width:900px; height:580px;"></div>
+    <script>
+      // var mymap = L.map('mapid').setView([103.8, 1.28], 13);
+      // L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+      //     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      //     maxZoom: 18,
+      //     id: 'mapbox/streets-v11',
+      //     accessToken: 'pk.eyJ1IjoiYXZlcmxpb24iLCJhIjoiY2txcHN2MmxhMTk5MzJ3cGVieHJrZmpwdCJ9.Mt5oY5g0Wcq0--mJalc50w' //ENTER YOUR ACCESS TOKEN HERE
+      // }).addTo(mymap);
+
+      // var mymap = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+      //       attribution: '© <a href="https://www.mapbox.com/feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      //       tileSize: 512,
+      //       zoomOffset: -1,
+      //       accessToken: 'pk.eyJ1IjoiYXZlcmxpb24iLCJhIjoiY2txcHN2MmxhMTk5MzJ3cGVieHJrZmpwdCJ9.Mt5oY5g0Wcq0--mJalc50w'
+      // }).addTo(mymap);
+
+      // L.mapbox.accessToken = 'pk.eyJ1IjoiYXZlcmxpb24iLCJhIjoiY2txcHN2MmxhMTk5MzJ3cGVieHJrZmpwdCJ9.Mt5oY5g0Wcq0--mJalc50w';
+    
+      // var mapboxTiles = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=' + L.mapbox.accessToken, {
+      //       attribution: '© <a href="https://www.mapbox.com/feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      //       tileSize: 512,
+      //       zoomOffset: -1
+      // });
+
+      // var map = L.map('map')
+      //   .addLayer(mapboxTiles)
+      //   .setView([103.8, 1.28], 15);
+
+
+      
+
+      var mymap = L.mapbox.map('mapid')
+      .setView([1.28, 103.848], 15);
+ 
+      L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+      attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
+      tileSize: 512,
+      maxZoom: 18,
+      zoomOffset: -1,
+      id: 'mapbox/streets-v11',
+      accessToken: ''
+      }).addTo(mymap);
+
+      mapMarkers1 = [];
+
+      var source = new EventSource('http://localhost:5001/topic/geodata_final1'); //ENTER YOUR TOPICNAME HERE
+      console.log(source);
+   
+      source.addEventListener('message', function(e){
+
+        console.log('Message');
+        obj = JSON.parse(e.data);
+        console.log(obj);
+
+        if(obj.busline == '00001') {
+          for (var i = 0; i < mapMarkers1.length; i++) {
+            mymap.removeLayer(mapMarkers1[i]);
+          }
+          marker1 = L.marker([obj.latitude, obj.longitude]).addTo(mymap);
+          mapMarkers1.push(marker1);
+        }
+
+
+      }, false);
+
+    </script>
+    <!-- END LEAFLET -->
+  </body>
+</html>
